@@ -19,17 +19,21 @@ public class Main {
                 .withType(DateFields.class)
                 .build()
                 .parse();
-        SimpleDateFormat csvDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        SimpleDateFormat csvDateFormat = new SimpleDateFormat("yyyyMMdd");
         SimpleDateFormat targetDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         Date targetDate = targetDateFormat.parse(targetDateString);
 
         for (DateFields bean : beans){
-            Date beginBlock = csvDateFormat.parse(bean.getBeginBlock());
-            Date endBlock = csvDateFormat.parse(bean.getEndBlock());
-            if (targetDate.compareTo(beginBlock) >= 0 && targetDate.compareTo(endBlock) <=0){
-                countOfBlocks++;
+            try {
+                Date beginBlock = csvDateFormat.parse(bean.getBeginBlock());
+                Date endBlock = csvDateFormat.parse(bean.getEndBlock());
+                if (targetDate.compareTo(beginBlock) >= 0 && targetDate.compareTo(endBlock) <=0){
+                    countOfBlocks++;
+                }
+            }catch (ParseException e){
+                //пропуск строк с некорректными данными даты
             }
         }
-        System.out.println("Всего ограничений " + targetDateString + ": " + csvDateFormat);
+        System.out.println("Всего ограничений " + targetDateString + ": " + countOfBlocks);
     }
 }
